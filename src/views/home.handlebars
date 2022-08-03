@@ -1,79 +1,47 @@
-<div class="bigContainer">
-    <div class="productSide container">
-
-        <div class="addProcuct"><br><br>
-            <div class="bg-light">
-                <div class="container bg-secondary">
-                    <h1>Agregar un nuevo producto</h1>
-                </div>
-                <form id="addProduct">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Nombre del Producto</label>
-                        <input id="name" name="name" type="text" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="price" class="form-label">Precio del Producto</label>
-                        <input id="price" name="price" type="number" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="img" class="form-label">link de la imagen del producto</label>
-                        <input id="img" class="form-control" type="text" name="img" required>
+<div class="main">
+        <div class="productSide">
+            <div class="newProduct">
+                <h2 class="formTitle">Add a new product</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Product Name</label>
+                        <input type="text" class="form-control" id="name"><br>
+                        <label for="exampleInputEmail1">Product Price</label>
+                        <input type="number" class="form-control" id="price"><br>
+                        <label for="exampleInputEmail1">Product URL image</label>
+                        <input type="text" class="form-control" id="img">
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
-        </div><br><br>
 
-        <div class="listProducts">
-            <div class="container bg-secondary">
-                <div>
-                    <h1>Lista de productos</h1>
-                </div>
-                <ul class="list-group list-group-horizontal row ">
-                    <li class="list-group-item col-4 bg-primary">Nombre</li>
-                    <li class="list-group-item col-4 bg-primary">Precio</li>
-                    <li class="list-group-item col-4 bg-primary">Imagen</li>
-                </ul>
-                {{#if listVoid}}
-                <h2>No hay productos</h2>
-                {{else}}
-
-                {{#each products}}
-                <ul class="list-group list-group-horizontal row">
-                    <li class="list-group-item col-4">{{this.name}}</li>
-                    <li class="list-group-item col-4">$ {{this.price}}</li>
-                    <li class="list-group-item col-4">
-                        <img src="http://localhost:8080/images/{{this.img}}" alt="product image" style="width: 70px;">
-                    </li>
-                </ul>
-                {{/each}}
-
-                {{/if}}
-
-            </div>
-        </div>
-    </div>
-
-    <div class="chatContainer">
-        <div class="casing">
-            <div class="window">
-                <div class="header" id="header">Usuario</div>
-
-                <div class="chats box" id="chats">
-                </div>
-
-                <div class="new-chat">
-                    <input type="text" id="chatBox" />
-                    <button id="send">Send</button>
-                </div>
-            </div>
-            <div class="home-btn">
-                <div class="hb-square"></div>
+            <div class="products">
+                {{> products}}
             </div>
         </div>
 
+        <div class="chatSide">
+            <div class="casing">
+                <div class="window">
+                    <div class="header" id="header">Usuario</div>
+
+                    <div class="chats box" id="chats">
+
+                        {{!-- insert chats --}}
+
+                    </div>
+
+                    <div class="new-chat">
+                        <input type="text" id="chatBox" />
+                        <button id="send">Send</button>
+                    </div>
+                </div>
+                <div class="home-btn">
+                    <div class="hb-square"></div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
 
 

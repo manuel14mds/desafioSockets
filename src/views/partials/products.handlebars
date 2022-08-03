@@ -1,0 +1,28 @@
+<div>
+    <h2>Lista de productos</h2>
+</div>
+<div class="listProducts">
+    <div class="container bg-secondary">
+        <ul class="list-group list-group-horizontal row ">
+            <li class="list-group-item col-4 bg-primary">Nombre</li>
+            <li class="list-group-item col-4 bg-primary">Precio</li>
+            <li class="list-group-item col-4 bg-primary">Imagen</li>
+        </ul>
+
+        {{#if listVoid}}
+        <h3>No hay productos</h3>
+        {{else}}
+
+        {{#each products}}
+        <ul class="list-group list-group-horizontal row">
+            <li class="list-group-item col-4">{{this.name}}</li>
+            <li class="list-group-item col-4">$ {{this.price}}</li>
+            <li class="list-group-item col-4">
+                <img src="{{this.img}}" alt="product image" style="width: 70px;">
+            </li>
+        </ul>
+        {{/each}}
+        {{/if}}
+
+    </div>
+</div>
