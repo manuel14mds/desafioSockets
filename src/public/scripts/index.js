@@ -3,47 +3,14 @@ const socket = io({
     autoConnect: false//para que no se autoconecte el socket
 });
 
-let userName
-function chatSocket(message) {
+function chatSocket() {
     if (chatBox.value.trim().length > 0) {
-        socket.emit('message', { userName: userName, message: message })
+        socket.emit('message', { userName: userName, message: chatBox.value })
         chatBox.value = ''
-        console.log(message)
     }
 }
-
-function chatsHTML(chatList) {
-    let str = ''
-
-    for (const chat of chatList) {
-        if (chat.userName === userName) {
-            str += `
-            <div>
-                <span class="u2 chat">
-                    <span class="userSay">${chat.userName}:</span><br>
-                    ${chat.message}<br>
-                    <span class="date">${chat.date}</span>
-                </span>
-        </div>
-                `
-        } else {
-            str += `
-                <div>
-                <span class="u1 chat">
-                    <span class="userSay">${chat.userName}:</span><br>
-                    ${chat.message}<br>
-                    <span class="date">${chat.date}</span>
-                </span>
-        </div>
-            `
-        }
-    }
-    return str
-}
-
 
 const header = document.getElementById('header')
-
 Swal.fire({
     title: 'Username',
     input: 'text',
@@ -63,7 +30,7 @@ Swal.fire({
 const chatBox = document.getElementById('chatBox')
 chatBox.addEventListener('keyup', (evt) => {
     if (evt.key === 'Enter') {
-        chatSocket(chatBox.value)
+        chatSocket()
     }
 })
 
@@ -71,10 +38,10 @@ chatBox.addEventListener('keyup', (evt) => {
 const sendButton = document.getElementById('send')
 sendButton.addEventListener('click', () => {
     console.log('entra al boton enviar')
-    chatSocket(chatBox.value)
+    chatSocket()
 })
 
-//It shows the chat messages
+//listening the chat messages and show them
 socket.on('log', (data) => {
     const chats = document.getElementById('chats')
     chats.innerText = ''
@@ -82,14 +49,47 @@ socket.on('log', (data) => {
     chats.scrollTop = chats.scrollHeight
 })
 
+
 // It shows a toast when a new user is connected
-socket.on('newUser', (data)=>{
-    if(userName){
+socket.on('newUserConnected', (data) => {
+    if (userName) {
         Swal.fire({
-            text:'Nuevo ususario en el chat',
-            toast:true, 
-            position:'top-right',
-            timer:1000
+            text: 'A new user joined!!',
+            toast: true,
+            position: 'top-right',
+            timer: 1000
+        })
+    }
+})
+
+// render the products list
+socket.on('productList', (data) => {
+    let listProducts = document.getElementById('listProducts')
+    listProducts.innerText = ''
+    listProducts.innerHTML = createProductListHTML(data.products)
+})
+
+
+// add product DOM engine
+const productName = document.getElementById('name')
+const price = document.getElementById('price')
+const img = document.getElementById('img')
+const btn = document.getElementById('btnSubmit')
+btn.addEventListener('click', (e) => {
+    e.preventDefault()
+    let product = {}
+    if (productName.value.trim().length > 0 && img.value.trim().length > 0) {
+        product.name = productName.value
+        product.price = price.value
+        product.img = img.value
+        socket.emit('addProduct', product)
+        productName.value = ''
+        price.value = ''
+        img.value = ''
+    } else {
+        Swal.fire({
+            text: "don't let void fields on form!",
+            toast: true
         })
     }
 })

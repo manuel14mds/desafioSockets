@@ -1,0 +1,20 @@
+[
+	{
+		"userName": "Dani",
+		"message": "Hola",
+		"date": "18:15:41",
+		"id": 1
+	},
+	{
+		"userName": "manu",
+		"message": "hola, como estan?",
+		"date": "18:18:47",
+		"id": 2
+	},
+	{
+		"userName": "manu",
+		"message": "hola",
+		"date": "18:22:51",
+		"id": 3
+	}
+]
