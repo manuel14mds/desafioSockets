@@ -3,14 +3,24 @@ import handlebars from 'express-handlebars'
 import __dirname from './utils.js'
 import { Server } from 'socket.io'
 import viewsRouter from './routes/views.router.js'
-import ProductManager from './managers/product.manager.js'
-import ChatManager from './managers/chat.manager.js'
+
 import ChatDB from './managers/chat.db.js'
 import ProductDB from './managers/products.db.js'
+import mongoose from 'mongoose'
+import services from './dao/index.js'
 
 const app = express()
-const server = app.listen(8080, () => console.log('listening on 8080 port \n'))
+const PORT = process.env.PORT||8080
+const server = app.listen(PORT, ()=> console.log(`listening on ${PORT}port`))
 const io = new Server(server)
+
+mongoose.connect('mongodb+srv://manu:123@clusterprueba.fp95ssd.mongodb.net/cafeCartagena?retryWrites=true&w=majority', err=>{
+    if(err){
+        console.log(err)
+    }else{
+        console.log('connected to Atlas Mongo')
+    }
+})
 
 app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname + '/views')
@@ -30,25 +40,37 @@ let products
 let log
 
 io.on('connection', async (socket) => {
-    products = await productDb.getAll()
-    log = await chats.getAll()
-
+    //products = await productDb.getAll()
+    products = await services.ProductService.getAll()
+    //log = await chats.getAll()
+    log = await services.ChatService.getAll()
+    console.log('log', log)
     console.log('Socket connected')
     socket.broadcast.emit('newUserConnected')
     io.emit('log', log)
     socket.emit('productList', { products })
 
     socket.on('message', async(data) => {
-        let currentTime = new Date();
-        data.date = currentTime.toLocaleTimeString();
-        await chats.addChat(data)
-        log = await chats.getAll()
+        //let currentTime = new Date();
+        //data.date = currentTime.toLocaleTimeString();
+        //await chats.addChat(data)
+
+        console.log(data)
+        await services.ChatService.save(data)
+
+
+        //log = await chats.getAll()
+        log = await services.ChatService.getAll()
         io.emit('log', log)
     })
     
     socket.on('addProduct', async (data) => {
-        await productDb.addProduct(data)
-        products = await productDb.getAll()
+        //await productDb.addProduct(data)
+        await services.ProductService.addProduct(data)
+
+        //products = await productDb.getAll()
+
+        products = services.ProductService.getAll()
         io.emit('productList', { products })
     })
 })

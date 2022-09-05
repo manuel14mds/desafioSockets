@@ -5,7 +5,7 @@ const socket = io({
 
 function chatSocket() {
     if (chatBox.value.trim().length > 0) {
-        socket.emit('message', { userName: userName, message: chatBox.value })
+        socket.emit('message', { username: username, message: chatBox.value })
         chatBox.value = ''
     }
 }
@@ -21,9 +21,9 @@ Swal.fire({
     allowOutsideClick: false,
     allowEscapeKey: false
 }).then(result => {
-    userName = result.value
+    username = result.value
     socket.connect()//se autoconecta el socket despues de las validaciones que haga
-    header.innerText = userName
+    header.innerText = username
 })
 
 //sends a new chat message
