@@ -12,7 +12,7 @@ function chatsHTML(chatList) {
                 <span class="u2 chat">
                     <span class="userSay">${chat.username}:</span><br>
                     ${chat.message}<br>
-                    <span class="date">${chat.date}</span>
+                    <span class="date">${chat.createdAt}</span>
                 </span>
         </div>
                 `
@@ -22,7 +22,7 @@ function chatsHTML(chatList) {
                 <span class="u1 chat">
                     <span class="userSay">${chat.username}:</span><br>
                     ${chat.message}<br>
-                    <span class="date">${chat.date}</span>
+                    <span class="date">${chat.createdAt}</span>
                 </span>
         </div>
             `
@@ -44,7 +44,7 @@ function createProductListHTML(products){
                 <li class="list-group-item col-4">${product.name}</li>
                 <li class="list-group-item col-4">$ ${product.price}</li>
                 <li class="list-group-item col-4">
-                    <img src="${product.img}" alt="${product.name} image" style="height: 80px;">
+                    <img src="${product.thumbnail}" alt="${product.name} image" style="height: 80px;">
                 </li>
             </ul>
             `

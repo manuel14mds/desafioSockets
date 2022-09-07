@@ -3,10 +3,17 @@ import mongoose from "mongoose";
 const collection = 'users'
 
 const usersSchema = mongoose.Schema({
-    username:String,
+    first_name:{
+        type:String,
+        required:true
+    },
+    last_name:{
+        type:String,
+        required:true
+    },
     role:{
         type:String,
-        default:'student'
+        default:'user'
     },
     age:Number,
     active:{
@@ -17,6 +24,7 @@ const usersSchema = mongoose.Schema({
         type:String,
         required:true
     }
+
 },{timestamps:true})
 
 const usersModelService = mongoose.model(collection,usersSchema)

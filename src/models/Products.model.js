@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const collection = 'products'
-
 const productsSchema = mongoose.Schema({
     name:{
         type:String,
@@ -17,7 +16,6 @@ const productsSchema = mongoose.Schema({
         type:Number,
         require:true
     },
-    img:String,
     code:String,
     enable:{
         type:Boolean,

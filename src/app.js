@@ -3,9 +3,8 @@ import handlebars from 'express-handlebars'
 import __dirname from './utils.js'
 import { Server } from 'socket.io'
 import viewsRouter from './routes/views.router.js'
+import productRouter from './routes/product.routes.js'
 
-import ChatDB from './managers/chat.db.js'
-import ProductDB from './managers/products.db.js'
 import mongoose from 'mongoose'
 import services from './dao/index.js'
 
@@ -31,44 +30,30 @@ app.use(express.json())
 app.use(express.static(__dirname + '/public'))
 
 app.use('/', viewsRouter)
+app.use('/api', productRouter)
 
-
-const productDb = new ProductDB()
-const chats = new ChatDB()
 
 let products
 let log
 
 io.on('connection', async (socket) => {
-    //products = await productDb.getAll()
     products = await services.ProductService.getAll()
-    //log = await chats.getAll()
     log = await services.ChatService.getAll()
-    console.log('log', log)
+
     console.log('Socket connected')
     socket.broadcast.emit('newUserConnected')
     io.emit('log', log)
     socket.emit('productList', { products })
 
     socket.on('message', async(data) => {
-        //let currentTime = new Date();
-        //data.date = currentTime.toLocaleTimeString();
-        //await chats.addChat(data)
-
-        console.log(data)
         await services.ChatService.save(data)
 
-
-        //log = await chats.getAll()
         log = await services.ChatService.getAll()
         io.emit('log', log)
     })
     
     socket.on('addProduct', async (data) => {
-        //await productDb.addProduct(data)
         await services.ProductService.addProduct(data)
-
-        //products = await productDb.getAll()
 
         products = services.ProductService.getAll()
         io.emit('productList', { products })
