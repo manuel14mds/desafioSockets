@@ -2,27 +2,23 @@ import {  Router } from "express"
 import services from '../dao/index.js'
 import mongoose from 'mongoose'
 import {normalize, schema} from 'normalizr'
+import { objectTransform } from "../utils.js"
 
 const router = Router()
 
 router.get('/', async(req,res)=>{
     let data = await services.ChatService.getAllPopulated()
-    
+    let dataAux=objectTransform(data)
     const user = new schema.Entity('users')
     const message = new schema.Entity('messages',{
         user:user
     })
-    const chat = new schema.Entity('chats',{
-        message:[message]
-    })
-    const normalizerData = normalize(data, chat)
-
+    const normalizerData = normalize(dataAux,[message])
+    
+    console.log(normalizerData)
     console.log(JSON.stringify(normalizerData, null, '\t'))
     res.send(normalizerData)
 })
-
-
-
 
 
 router.delete('/', async(req,res)=>{
@@ -39,9 +35,9 @@ router.post('/', async(req,res)=>{
 
 router.post('/addUser', async(req,res)=>{
     await services.UserService.save({
-        first_name:'Manuel',
-        last_name:'Florez',
-        email:'m@mail.com'
+        first_name:'Julian',
+        last_name:'Dominguez',
+        email:'J@mail.com'
     })
     res.send('user created')
 })

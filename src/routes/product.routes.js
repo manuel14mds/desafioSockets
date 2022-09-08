@@ -12,7 +12,7 @@ router.post('/newProduct', async(req,res)=>{
     console.log(req.body)
     res.send({status:'success', message:'Product added'})
 })
-router.get('/productos-test', async(req,res)=>{
+router.post('/productos-test', async(req,res)=>{
     try {
         for(let i=0; i<5; i++){
             await services.ProductService.addProduct({
