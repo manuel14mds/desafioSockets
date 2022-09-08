@@ -2,8 +2,10 @@ import express from 'express'
 import handlebars from 'express-handlebars'
 import __dirname from './utils.js'
 import { Server } from 'socket.io'
+
 import viewsRouter from './routes/views.router.js'
 import productRouter from './routes/product.routes.js'
+import chatRouter from './routes/chats.router.js'
 
 import mongoose from 'mongoose'
 import services from './dao/index.js'
@@ -31,6 +33,7 @@ app.use(express.static(__dirname + '/public'))
 
 app.use('/', viewsRouter)
 app.use('/api', productRouter)
+app.use('/chats', chatRouter)
 
 
 let products

@@ -5,4 +5,8 @@ export default class Chats extends MongoContainer{
         super()
         this.modelService = chatModelService
     }
+    getAllPopulated= async()=>{
+        let data =  await this.modelService.find().populate('user')
+        return data
+    }
 }
