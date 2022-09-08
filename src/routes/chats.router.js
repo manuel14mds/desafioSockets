@@ -14,7 +14,7 @@ router.get('/', async(req,res)=>{
         user:user
     })
     const normalizerData = normalize(dataAux,[message])
-    
+
     console.log(normalizerData)
     console.log(JSON.stringify(normalizerData, null, '\t'))
     res.send(normalizerData)
@@ -41,4 +41,9 @@ router.post('/addUser', async(req,res)=>{
     })
     res.send('user created')
 })
+router.get('/users', async(req,res)=>{
+    let users = await services.UserService.getAll()
+    res.send(users)
+})
+
 export default router
