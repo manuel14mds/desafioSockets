@@ -3,14 +3,15 @@ let username
 
 //Its creates from all chatList the html chats
 function chatsHTML(chatList) {
+    console.log(chatList)
     let str = ''
 
     for (const chat of chatList) {
-        if (chat.username === username) {
+        if (chat.user.first_name === username) {
             str += `
             <div>
                 <span class="u2 chat">
-                    <span class="userSay">${chat.username}:</span><br>
+                    <span class="userSay">${chat.user.first_name}:</span><br>
                     ${chat.message}<br>
                     <span class="date">${chat.createdAt}</span>
                 </span>
@@ -20,7 +21,7 @@ function chatsHTML(chatList) {
             str += `
                 <div>
                 <span class="u1 chat">
-                    <span class="userSay">${chat.username}:</span><br>
+                    <span class="userSay">${chat.user.first_name}:</span><br>
                     ${chat.message}<br>
                     <span class="date">${chat.createdAt}</span>
                 </span>

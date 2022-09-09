@@ -10,6 +10,7 @@ import chatRouter from './routes/chats.router.js'
 import mongoose from 'mongoose'
 import services from './dao/index.js'
 
+
 const app = express()
 const PORT = process.env.PORT||8080
 const server = app.listen(PORT, ()=> console.log(`listening on ${PORT}port`))
@@ -41,7 +42,7 @@ let log
 
 io.on('connection', async (socket) => {
     products = await services.ProductService.getAll()
-    log = await services.ChatService.getAll()
+    log = await services.ChatService.getAllPopulated()
 
     console.log('Socket connected')
     socket.broadcast.emit('newUserConnected')
@@ -51,7 +52,7 @@ io.on('connection', async (socket) => {
     socket.on('message', async(data) => {
         await services.ChatService.save(data)
 
-        log = await services.ChatService.getAll()
+        log = await services.ChatService.getAllPopulated()
         io.emit('log', log)
     })
     
