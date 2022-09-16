@@ -13,4 +13,8 @@ export default class Users extends MongoContainer{
             }
         })
     }
+    getByEmail= async(email)=>{
+        let user = await this.modelService.findOne({email:email})
+        return user
+    }
 }

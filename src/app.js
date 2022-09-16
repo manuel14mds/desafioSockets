@@ -1,13 +1,16 @@
 import express from 'express'
+import session from 'express-session';
 import handlebars from 'express-handlebars'
 import __dirname from './utils.js'
 import { Server } from 'socket.io'
 
 import viewsRouter from './routes/views.router.js'
 import productRouter from './routes/product.routes.js'
+import sessionsRouter from './routes/sessions.router.js'
 import chatRouter from './routes/chats.router.js'
 
 import mongoose from 'mongoose'
+import MongoStore from 'connect-mongo';
 import services from './dao/index.js'
 
 
@@ -29,11 +32,21 @@ app.set('views', __dirname + '/views')
 app.set('view engine', 'handlebars')
 
 app.use(express.json())
-
 app.use(express.static(__dirname + '/public'))
+app.use(session({
+    secret:'c0derSecretString',
+    store:MongoStore.create({
+        mongoUrl:"mongodb+srv://manu:123@clusterprueba.fp95ssd.mongodb.net/cafeCartagena?retryWrites=true&w=majority",
+        ttl:3600
+    }),
+    resave:false,
+    saveUninitialized:false
+}));
+
 
 app.use('/', viewsRouter)
 app.use('/api', productRouter)
+app.use('/api/sessions',sessionsRouter);
 app.use('/chats', chatRouter)
 
 
@@ -42,24 +55,24 @@ let log
 
 io.on('connection', async (socket) => {
     products = await services.ProductService.getAll()
-    log = await services.ChatService.getAllPopulated()
+    //log = await services.ChatService.getAllPopulated()
 
     console.log('Socket connected')
     socket.broadcast.emit('newUserConnected')
-    io.emit('log', log)
+    //io.emit('log', log)
     socket.emit('productList', { products })
 
     socket.on('message', async(data) => {
         await services.ChatService.save(data)
 
-        log = await services.ChatService.getAllPopulated()
-        io.emit('log', log)
+        //log = await services.ChatService.getAllPopulated()
+        //io.emit('log', log)
     })
     
     socket.on('addProduct', async (data) => {
         await services.ProductService.addProduct(data)
 
         products = services.ProductService.getAll()
-        io.emit('productList', { products })
+        //io.emit('productList', { products })
     })
 })

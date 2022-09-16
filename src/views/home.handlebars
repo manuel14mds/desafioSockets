@@ -1,4 +1,11 @@
 <div class="main">
+    <dir>
+        <div class="container">
+            <h1>Welcome {{user.name}}</h1>
+            <button type="button" id="logout" class="btn btn-outline-danger">logout</button>
+        </div>
+
+    </dir>
     <div class="productSide">
         <div class="newProduct">
             <h2 class="formTitle">Add a new product</h2>
@@ -56,3 +63,10 @@
         </div>
     </div>
 </div>
+<script>
+    const btn = document.getElementById('logout')
+    btn.addEventListener('click', event=>{
+        console.log('entra al botón')
+        location.href = "http://localhost:8080/api/sessions/logout"
+    })
+</script>
