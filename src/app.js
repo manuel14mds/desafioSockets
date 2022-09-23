@@ -3,15 +3,17 @@ import session from 'express-session';
 import handlebars from 'express-handlebars'
 import __dirname from './utils.js'
 import { Server } from 'socket.io'
+import mongoose from 'mongoose'
+import MongoStore from 'connect-mongo';
 
 import viewsRouter from './routes/views.router.js'
 import productRouter from './routes/product.routes.js'
 import sessionsRouter from './routes/sessions.router.js'
 import chatRouter from './routes/chats.router.js'
 
-import mongoose from 'mongoose'
-import MongoStore from 'connect-mongo';
 import services from './dao/index.js'
+import initializePassport from './config/passport.config.js';
+import passport from 'passport';
 
 
 const app = express()
@@ -43,6 +45,9 @@ app.use(session({
     saveUninitialized:false
 }));
 
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use('/', viewsRouter)
 app.use('/api', productRouter)

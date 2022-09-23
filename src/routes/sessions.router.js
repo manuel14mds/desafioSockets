@@ -1,45 +1,42 @@
 import {Router} from 'express'
-import services from '../dao/index.js';
-import { createHash, isValidPassword } from '../utils.js'
 import __dirname from '../utils.js';
+import passport from 'passport';
+
+
 
 const router = Router();
-router.post('/register',async (req,res)=>{
-    console.log('entra a session router register')
-    const {name,email,password} = req.body;
-    if(!name||!email||!password) return res.status(400).send({status:"error",error:"Incomplete values"})
-    //¿El usuario ya está en la base de datos?
-    const exists = await services.UserService.getByEmail(email)
-    if(exists) return res.status(400).send({status:"error",error:"User already exists"})
-    //Insertamos en la base
-    const newUser = {
-        name,
-        email,
-        password:createHash(password)
-    }
-
-    let result = await services.UserService.save(newUser)
-    res.render('login')
-    //res.send(result);
+router.post('/register', passport.authenticate('register', {failureRedirect:'/api/sessions/registerfail'}), async (req,res)=>{
+    res.send({status:'success',payload:req.user._id})
 })
 
 
-router.post('/login',async(req,res)=>{
-    let {email,password } = req.body
-    if(!email||!password) return done(null,false,{message:"Incomplete values"})
-    const user = await services.UserService.getByEmail(email)
-    if(!user) return res.status(400).send({status:"error",error:"Incorrect credentials"})
-    if(!isValidPassword(user,password))return res.status(400).send({status:"error",error:"Incorrect credentials"})
+router.post('/login', passport.authenticate('login',{failureRedirect:'/api/sessions/loginfail'}), async(req,res)=>{
+
     req.session.user = {
-        name:user.name,
-        email:user.email,
-        id:user._id
+        name:req.user.name,
+        email:req.user.email,
+        id:req.user._id
     }
     res.send({status:'success',payload:req.session.user})
+})
+
+router.get('/registerfail', (req,res)=>{
+    console.log('register error')
+    res.status(500).send({status:'error', error:'Register error'})
+})
+router.get('/loginfail', (req,res)=>{
+    console.log('login error')
+    res.status(500).send({status:'error', error:'Login error'})
 })
 
 router.get('/logout',(req,res)=>{
     req.session.destroy()
     res.redirect('/')
 })
+
+router.get('/data',(req,res)=>{
+    if(!req.session.user) return res.redirect('/login');
+    res.render('data',{user:req.session.user});
+})
+
 export default router
